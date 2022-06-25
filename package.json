@@ -1,12 +1,15 @@
 {
-  "name": "linked-list",
+  "name": "@anthonio/linked-list",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": "git@github.com:aolyang/linked-list.git",
   "author": "aolyang <aolyang@foxmail.com>",
   "license": "MIT",
+  "files": ["dist", "lib"],
   "scripts": {
-    "build": "",
+    "build": "tsc --project ./tsconfig.json",
     "test": "jest"
   },
   "devDependencies": {
