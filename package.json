@@ -1,0 +1,30 @@
+{
+  "name": "@anthonio/linked-list",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": "git@github.com:aolyang/linked-list.git",
+  "author": "aolyang <aolyang@foxmail.com>",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "lib"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node --project ./tsconfig.json ./examples/node.ts ",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/jest": "^28.1.3",
+    "@types/node": "^18.0.0",
+    "jest": "^28.1.1",
+    "ts-jest": "^28.0.5",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "jest-config": "^28.1.1"
+  }
+}
