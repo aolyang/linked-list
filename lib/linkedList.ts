@@ -1,12 +1,12 @@
 export type Opt<T> = T | null
 
 class LinkedListNode<T> {
-  readonly #data: Opt<T>
+  #data: Opt<T>
   prev: Opt<LinkedListNode<Opt<T>>> = null
   next: Opt<LinkedListNode<Opt<T>>> = null
 
-  constructor(node: T | null = null, prev?: T, next?: T) {
-    this.#data = node
+  constructor(data: T, prev?: T, next?: T) {
+    this.#data = data
 
     if (prev) this.prev = new LinkedListNode(prev)
     if (next) this.next = new LinkedListNode(next)
@@ -15,6 +15,10 @@ class LinkedListNode<T> {
 
   get data() {
     return this.#data
+  }
+
+  destroy() {
+    this.#data = this.prev = this.next = null
   }
 }
 
@@ -92,7 +96,30 @@ class LinkedList<T> {
       })
     }
     if (ok) this.size++
-    return ok
+    return ok ? node : null
+  }
+
+  remove(fn: ((node: LinkedListNode<T>, index: number) => boolean)): T | null {
+    let _node: T | null = null
+    this.forEach((node, index, stop) => {
+      if (fn(node, index)) {
+        if (index === 0 && this.head?.next) {
+          this.head.next.prev = null
+          this.head = this.head.next as any
+        } else if (index === (this.size - 1) && this.tail?.prev) {
+          this.tail.prev.next = null
+          this.tail = this.tail.prev as any
+        } else {
+          node.prev!.next = node.next
+          node.next!.prev = node.prev
+        }
+        _node = node.data
+        node.destroy()
+        this.size--
+        stop()
+      }
+    })
+    return _node
   }
 
   forEach<R = T>(fn: (node: LinkedListNode<R>, index: number, stop: () => void) => any) {
@@ -115,7 +142,6 @@ class LinkedList<T> {
     let results: R[] = []
     this.forEach<N>((node, index) => {
       results.push(fn(node, index))
-
     })
     return results
   }
@@ -153,7 +179,28 @@ class LinkedList<T> {
   }
 
   push(...data: T[]) {
+    data.forEach(_d => this.insert(_d))
+  }
 
+  shift() {
+    return this.remove((_, index) => index === 0)
+  }
+
+  unshift<R = T>(data: R) {
+    const node = new LinkedListNode(data as any)
+    if (this.size === 0) {
+      this.tail = this.head = node
+    } else {
+      node.next = this.head
+      this.head!.prev = node
+      this.head = node
+      if (this.size === 1) {
+        this.head!.next = this.tail
+        this.tail!.prev = this.head
+      }
+    }
+    this.size++
+    return node
   }
 }
 
